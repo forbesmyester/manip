@@ -1,0 +1,32 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>SyncIt Testing</title>
+	<link href="node_modules/mocha/mocha.css" rel="stylesheet"/>
+</head>
+<body>
+  <div id="mocha"></div>
+</body>
+	<script>
+		function assert(expr, msg) {
+			if (!expr) throw new Error(msg || 'failed');
+		}
+	</script>
+	<script src="node_modules/jquery/dist/jquery.js"></script>
+	<script src="node_modules/mocha/mocha.js"></script>
+	<script src="node_modules/expect.js/expect.js"></script>
+	
+	
+	<script>mocha.setup('bdd')</script>
+	
+	<script src="index.js"></script>
+	<script src="test/index.js"></script>
+	<script>
+		$(document).ready(function() {
+			mocha.globals(['Module']);
+			mocha.run();
+		});
+	</script>
+
+</html>
+
