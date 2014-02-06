@@ -1,6 +1,6 @@
 {
   "name": "manip",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "A library for manipulating nested data in a way reminiscent of MongoDB's \"Field Update Operators\" work (eg. $set)",
   "author": "Matthew Forrester <manip@keyboardwritescode.com>",
   "dependencies": {
