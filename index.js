@@ -68,7 +68,7 @@ manip.fn = {};
  * * **@return {Object}** The result.
  */
 manip._setKey = function(r,path,value) {
-	var	k,
+	var k,
 		t = r,
 		parsePath = path.split('.');
 	
@@ -98,7 +98,7 @@ manip._setKey = function(r,path,value) {
  * * **@return {Object}** The result.
  */
 manip._getKey = function(r,path) {
-	var	k,
+	var k,
 		t = r,
 		parsePath = path.split('.');
 	
@@ -127,7 +127,7 @@ manip._getKey = function(r,path) {
  * * **@return {Object}** The result
  */
 manip._remKey = function(r,path) {
-	var	k,
+	var k,
 		t = r,
 		parsePath = path.split('.');
 	
@@ -193,8 +193,6 @@ manip.addManipulation('push',function(ob,jsonSnippet) {
 	
 	var k, v;
 	
-	var isObj = function(o) { return (typeof o == 'object'); };
-	
 	var subOps = {
 		"scalar": function(src, val) {
 			src.push(val);
@@ -243,33 +241,38 @@ manip.addManipulation('push',function(ob,jsonSnippet) {
 	
 	var processPushMods = function(v, pushMods) {
 		
+		var toPush = {},
+			willPush = false;
+		
 		for (var k in pushMods) {
 			if (
 				pushMods.hasOwnProperty(k) &&
 				(subOps.hasOwnProperty(k))
 			) {
 				v = subOps[k](v, pushMods[k]);
+			} else {
+				willPush = true;
+				toPush[k] = pushMods[k];
 			}
 		}
+		
+		subOps.scalar(v, toPush);
 		
 		return v;
 	};
 	
 	for (k in jsonSnippet) { if (jsonSnippet.hasOwnProperty(k)) {
-		
+	
 		v = manip._getKey(ob,k);
 		if (v === undefined) {
 			v = [];
 		}
+		
 		if (!ob[k] instanceof Array) {
 			v = [ob[k]];
 		}
 		
-		if (!isObj(jsonSnippet[k])) {
-			v = subOps.scalar(v, jsonSnippet[k]);
-		} else {
-			v = processPushMods(v, jsonSnippet[k]);
-		}
+		v = processPushMods(v, jsonSnippet[k]);
 		
 		ob = manip._setKey(ob,k,v);
 	} }

@@ -65,6 +65,17 @@ describe('manip',function() {
 		});
 	});
 	
+	it('can push complex (creating)', function() {
+		var ob = {a:"234"};
+		ob = manip(ob, {"$push": {"d.e": {a: 1, b: 2, c: 3}}});
+		expect(ob).to.eql({
+			"a" : "234",
+			"d" : {
+				"e" : [{a: 1, b: 2, c: 3}]
+			}
+		});
+	});
+	
 	it('can push with $each', function() {
 		var ob = {a:"234"};
 		ob = manip(ob, {$set: {"d.e":[1, 2, 3], "f": [4, 5, 6]}});
