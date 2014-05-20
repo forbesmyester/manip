@@ -239,6 +239,12 @@ describe('manip',function() {
 					}
 				}},
 				expected: {hi: 'there', car: {wheels: 4, drivers: ['faye', 'fred']}, z: 1}
+			},
+			{
+				cmd: {'$push': {
+					'car.drivers': ['jack married', 'jill married']
+				}},
+				expected: {hi: 'there', car: {wheels: 4, drivers: ['faye', 'fred', ['jack married', 'jill married']]}, z: 1}
 			}
 		];
 		for (i=0; i<steps.length; i++) {

@@ -195,6 +195,13 @@ manip.addManipulation('push',function(ob,jsonSnippet) {
 	
 	var subOps = {
 		"scalar": function(src, val) {
+			var i, l;
+			if (val.length && (typeof val != 'string')) {
+				for (i=0, l=val.length; i<l; i++) {
+					src.push(v[i]);
+				}
+				return src;
+			}
 			src.push(val);
 			return src;
 		},
@@ -242,22 +249,37 @@ manip.addManipulation('push',function(ob,jsonSnippet) {
 	var processPushMods = function(v, pushMods) {
 		
 		var toPush = {},
-			willPush = false;
+			willPush = false,
+			didComplex = false;
 		
+		if (['string', 'number'].indexOf(typeof pushMods) > -1) {
+			subOps.scalar(v, pushMods);
+			return v;
+		}
+
 		for (var k in pushMods) {
 			if (
 				pushMods.hasOwnProperty(k) &&
 				(subOps.hasOwnProperty(k))
 			) {
 				v = subOps[k](v, pushMods[k]);
+				didComplex = true;
 			} else {
 				willPush = true;
 				toPush[k] = pushMods[k];
 			}
 		}
 		
-		subOps.scalar(v, toPush);
-		
+		if (willPush) {
+			subOps.scalar(v, toPush);
+			return v;
+		}
+
+		if (didComplex) {
+			return v;
+		}
+
+		subOps.scalar(v, pushMods);
 		return v;
 	};
 	
